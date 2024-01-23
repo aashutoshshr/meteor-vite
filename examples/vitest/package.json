@@ -1,5 +1,5 @@
 {
-  "name": "meteor-example-app",
+  "name": "vitest-example",
   "private": true,
   "scripts": {
     "start": "meteor run",
