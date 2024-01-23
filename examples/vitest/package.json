@@ -17,7 +17,7 @@
       "client": "imports/entrypoints/meteor-client.ts",
       "server": "imports/entrypoints/meteor-server.ts"
     },
-    "testModule": "tests/main.js"
+    "testModule": "tests/main.ts"
   },
   "devDependencies": {
     "@types/meteor": "^2.9.8",
