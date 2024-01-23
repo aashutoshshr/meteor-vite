@@ -1,4 +1,5 @@
-import assert from "assert";
+import { assert, describe, it } from 'vitest';
+
 
 describe(".example-template", function () {
   it("package.json has correct name", async function () {
