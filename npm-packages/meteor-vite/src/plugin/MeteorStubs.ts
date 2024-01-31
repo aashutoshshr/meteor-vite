@@ -206,6 +206,7 @@ type ResolvedPluginConfig = Required<PluginSettings>;
  * todo: expand types
  */
 export type ProjectJson = {
+    name: string;
     dependencies: {
         'meteor-vite'?: string;
     }
@@ -227,10 +228,21 @@ export type ProjectJson = {
              * Specifies an alternative path to the project's Vite config
              */
             configFile?: string;
+            
+            /**
+             * Remove or replace Meteor packages when preparing the intermediary production build.
+             * Does not affect your final production bundle. It's only used as a temporary build step.
+             */
             replacePackages?: {
                 startsWith: string; // Match any Meteor package name that starts with the provided string.
                 replaceWith: string; // Replace matching packages with the provided string.
-            }[]
+            }[];
+            
+            /**
+             * Override the directory path used for preparing the Vite production bundle.
+             * Might be useful if the automatically generated file path is inaccessible in your operating system
+             */
+            tempBuildDir?: string;
         }
     }
 }

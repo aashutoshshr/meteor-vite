@@ -1,6 +1,6 @@
 Package.describe({
   name: 'jorgenvatle:vite-bundler',
-  version: '1.12.0',
+  version: '1.12.1',
   summary: 'Integrate the Vite.js bundler with Meteor',
   git: 'https://github.com/JorgenVatle/meteor-vite',
   documentation: 'README.md',
@@ -15,11 +15,13 @@ Package.registerBuildPlugin({
         'typescript@3.0.0 || 4.0.0 || 5.0.0',
     ],
     sources: [
-        'build.js',
+        'build.ts',
         'workers.ts',
         'plugin/Compiler.ts',
+        'plugin/IntermediaryMeteorProject.ts',
         'utility/Logger.ts',
-        'utility/Helpers.ts'
+        'utility/Helpers.ts',
+        'utility/Errors.ts'
     ],
     npmDependencies: {
         execa: '6.1.0',

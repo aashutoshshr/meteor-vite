@@ -1,22 +1,32 @@
 import { parse } from '@babel/parser';
 import {
-    CallExpression, Expression, ExpressionStatement,
-    FunctionExpression, Identifier, is, MemberExpression,
-    Node, NumericLiteral,
-    ObjectExpression, ObjectMethod,
-    ObjectProperty, shallowEqual, StringLiteral,
-    traverse, VariableDeclarator,
+    is,
+    isCallExpression,
+    isFunctionExpression,
+    isIdentifier,
+    isMemberExpression,
+    isObjectExpression, isObjectProperty,
+    isReturnStatement,
+    isStringLiteral,
+    Node,
+    NumericLiteral,
+    ObjectExpression,
+    ObjectMethod,
+    ObjectProperty,
+    StringLiteral,
+    traverse,
+    VariableDeclarator,
 } from '@babel/types';
 import FS from 'fs/promises';
 import { inspect } from 'util';
-import Logger from '../../utilities/Logger';
 import { MeteorViteError } from '../../error/MeteorViteError';
+import Logger from '../../utilities/Logger';
 import {
     KnownModuleMethodNames,
+    MeteorInstallCallExpression,
     MeteorPackageProperty,
     ModuleMethod,
     ModuleMethodName,
-    MeteorInstallObject, MeteorInstallCallExpression,
 } from './ParserTypes';
 
 interface ParseOptions {
@@ -113,59 +123,97 @@ function readMainModulePath(node: Node) {
     return node.init.arguments[0].value;
 }
 
-
 function parsePackageScope(node: Node) {
-    if (node.type !== 'CallExpression') return;
-    if (node.callee.type !== 'MemberExpression') return;
-    const { object, property } = node.callee;
-    if (object.type !== 'Identifier') return;
-    if (object.name !== 'Package') return;
-    if (property.type !== 'Identifier') return;
-    if (property.name !== '_define') return;
-    
-    const args = {
-        packageName: node.arguments[0],
-        moduleExports: node.arguments[1],
-        packageExports: node.arguments[2],
-    }
-    
-    if (args.packageName.type !== 'StringLiteral') {
-        throw new ModuleExportsError('Unexpected type received for package name!', args.packageName);
-    }
-    
-    /**
-     * Deals with the meteor/meteor core packages that don't use the module system.
-     */
-    if (!args.packageExports && args.moduleExports?.type === 'ObjectExpression') {
-        args.packageExports = args.moduleExports;
-    }
-    
-    const packageExport = {
-        name: args.packageName.value,
-        exports: [] as string[],
-    };
-    
-    /**
-     * Module is likely a lazy-loaded package or one that only provides side effects as there are no exports in any
-     * form.
-     */
-    if (!args.packageExports) {
+    function meteorV2(node: Node) {
+        if (node.type !== 'CallExpression') return;
+        if (node.callee.type !== 'MemberExpression') return;
+        const { object, property } = node.callee;
+        if (object.type !== 'Identifier') return;
+        if (object.name !== 'Package') return;
+        if (property.type !== 'Identifier') return;
+        if (property.name !== '_define') return;
+        
+        const args = {
+            packageName: node.arguments[0],
+            moduleExports: node.arguments[1],
+            packageExports: node.arguments[2],
+        }
+        
+        if (args.packageName.type !== 'StringLiteral') {
+            throw new ModuleExportsError('Unexpected type received for package name!', args.packageName);
+        }
+        
+        /**
+         * Deals with the meteor/meteor core packages that don't use the module system.
+         */
+        if (!args.packageExports && args.moduleExports?.type === 'ObjectExpression') {
+            args.packageExports = args.moduleExports;
+        }
+        
+        const packageExport = {
+            name: args.packageName.value,
+            exports: [] as string[],
+        };
+        
+        /**
+         * Module is likely a lazy-loaded package or one that only provides side effects as there are no exports in any
+         * form.
+         */
+        if (!args.packageExports) {
+            return packageExport;
+        }
+        
+        if (args.packageExports.type !== 'ObjectExpression') {
+            throw new ModuleExportsError('Unexpected type received for package-scope exports argument!', args.packageExports);
+        }
+        
+        args.packageExports.properties.forEach((property) => {
+            if (property.type === 'SpreadElement') {
+                throw new ModuleExportsError('Unexpected property type received for package-scope exports!', property)
+            }
+            
+            packageExport.exports.push(propParser.getKey(property));
+        })
+        
         return packageExport;
     }
     
-    if (args.packageExports.type !== 'ObjectExpression') {
-        throw new ModuleExportsError('Unexpected type received for package-scope exports argument!', args.packageExports);
-    }
     
-    args.packageExports.properties.forEach((property) => {
-        if (property.type === 'SpreadElement') {
-            throw new ModuleExportsError('Unexpected property type received for package-scope exports!', property)
+    function meteorV3(node: Node) {
+        if (!isCallExpression(node)) return;
+        if (!isMemberExpression(node.callee)) return;
+        if (!isIdentifier(node.callee.property, { name: 'queue' })) return;
+        if (!isStringLiteral(node.arguments[0])) return;
+        if (!isFunctionExpression(node.arguments[2])) return;
+        const packageName = node.arguments[0].value;
+        const exports: string[] = [];
+        
+        const packageFunction = node.arguments[2];
+        for (const node of packageFunction.body.body) {
+            if (!isReturnStatement(node)) continue;
+            if (!isObjectExpression(node.argument)) continue;
+            for (const property of node.argument.properties) {
+                if (!isObjectProperty(property)) continue;
+                if (!isIdentifier(property.key, { name: 'export' })) continue;
+                if (!isFunctionExpression(property.value)) continue;
+                const exportBody = property.value.body.body;
+                for (const node of exportBody) {
+                    if (!isReturnStatement(node)) continue;
+                    if (!isObjectExpression(node.argument)) continue;
+                    node.argument.properties.forEach((node) => {
+                        if (!isObjectProperty(node)) return;
+                        if (!isIdentifier(node.key)) return;
+                        exports.push(node.key.name);
+                    });
+                    
+                }
+            }
         }
         
-        packageExport.exports.push(propParser.getKey(property));
-    })
+        return { name: packageName, exports };
+    }
     
-    return packageExport;
+    return meteorV2(node) || meteorV3(node);
 }
 
 /**

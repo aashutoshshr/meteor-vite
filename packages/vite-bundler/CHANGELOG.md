@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 1.12.1
+
+### Patch Changes
+
+- 9eae8fd: Refactor build plugin entrypoint to use TypeScript
+
 ## 1.12.0
 
 ### Minor Changes

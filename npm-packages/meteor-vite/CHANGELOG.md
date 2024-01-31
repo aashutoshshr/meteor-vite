@@ -1,5 +1,17 @@
 # meteor-vite
 
+## 1.9.0
+
+### Minor Changes
+
+- 3101e1a: Add support for Meteor v3.0-beta.0
+
+  - Fixes #81
+
+### Patch Changes
+
+- 40edd14: Fix internal type for Package.json `tempBuildDir` configuration option
+
 ## 1.8.0
 
 ### Minor Changes

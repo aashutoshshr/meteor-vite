@@ -1,6 +1,8 @@
 import { Meteor } from "meteor/meteor";
 import { onPageLoad } from "meteor/server-render";
 import LinksCollection from '../imports/api/links/links.collection';
+import '../imports/api/links/links.methods';
+import '../imports/api/links/server/links.publications';
 
 Meteor.startup(async () => {
   // Code to run on server startup.
@@ -11,7 +13,7 @@ Meteor.startup(async () => {
     return;
   }
   
-  LinksCollection.insertAsync({
+  await LinksCollection.insertAsync({
     title: 'Meteor.com',
     url: 'https://meteor.com',
   });

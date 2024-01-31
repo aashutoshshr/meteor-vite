@@ -3,23 +3,53 @@
     {
       "releases": [
         {
-          "name": "vite-bundler",
+          "name": "meteor-vite",
           "type": "minor"
         }
       ],
-      "summary": "Add minimal support for Meteor v3 (#83)\n\n- Refactor internal Vite dev server config store to use async collection methods rather than relying on Fibers.\n- Increased minimum Meteor version requirement to v2.8.2\n- Add previously missing `mongo` dependency to `package.js` dependencies.\n\nTodo:\n- [ ] Update Meteor bundle parser to handle new bundle format from v3. (#81)",
-      "id": "witty-radios-bathe"
+      "summary": "Add support for Meteor v3.0-beta.0\n\n- Fixes #81",
+      "id": "lucky-berries-approve"
+    },
+    {
+      "releases": [
+        {
+          "name": "vite-bundler",
+          "type": "patch"
+        }
+      ],
+      "summary": "Refactor build plugin entrypoint to use TypeScript",
+      "id": "perfect-weeks-happen"
+    },
+    {
+      "releases": [
+        {
+          "name": "meteor-vite",
+          "type": "patch"
+        }
+      ],
+      "summary": "Fix internal type for Package.json `tempBuildDir` configuration option",
+      "id": "slow-pumas-pump"
     }
   ],
   "releases": [
     {
-      "name": "vite-bundler",
+      "name": "meteor-vite",
       "type": "minor",
-      "oldVersion": "1.11.0",
+      "oldVersion": "1.8.0",
       "changesets": [
-        "witty-radios-bathe"
+        "lucky-berries-approve",
+        "slow-pumas-pump"
       ],
-      "newVersion": "1.12.0"
+      "newVersion": "1.9.0"
+    },
+    {
+      "name": "vite-bundler",
+      "type": "patch",
+      "oldVersion": "1.12.0",
+      "changesets": [
+        "perfect-weeks-happen"
+      ],
+      "newVersion": "1.12.1"
     }
   ]
 }

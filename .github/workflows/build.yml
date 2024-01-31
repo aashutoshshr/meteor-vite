@@ -1,5 +1,5 @@
 name: 'Build'
-run-name: 'Build: ${{ github.event.head_commit.message || github.event.pull_request.title }}'
+run-name: '🗃️ Build: ${{ github.event.head_commit.message || github.event.pull_request.title }}'
 
 on:
   push:

@@ -2,7 +2,8 @@ import FS from 'fs/promises';
 import Path from 'path';
 import { ModuleList, PackageScopeExports } from '../../src/meteor/parser/Parser';
 
-export const AllMockPackages: MockModule<ModuleList>[] = [];
+export const AllMockPackages_MeteorV2: MockModule<ModuleList>[] = [];
+export const AllMockPackages_MeteorV3: MockModule<ModuleList>[] = [];
 
 export const TsModules = prepareMock({
     packageName: 'test:ts-modules',
@@ -68,6 +69,18 @@ export const Check = prepareMock({
     },
     mainModulePath: '/node_modules/meteor/check/match.js'
 });
+
+export const Mongo = prepareMock({
+    fileName: 'mongo.js',
+    modules: {
+    
+    },
+    packageName: 'mongo',
+    packageScopeExports: {
+        'mongo': ['Mongo'],
+    },
+    mainModulePath: ''
+})
 
 export const MeteorJs = prepareMock({
     fileName: 'meteor.js',
@@ -154,8 +167,23 @@ export const RdbSvelteMeteorData = prepareMock({
     mainModulePath: '/node_modules/meteor/rdb:svelte-meteor-data/index.js',
 })
 
-function prepareMock<Modules extends ModuleList>({ fileName, ...details }: PrepareMockModule<Modules>): MockModule<Modules> {
-    const filePath = Path.join(__dirname, `meteor-bundle/${fileName}`);
+export const MeteorV3Mocks = {
+    Mongo: prepareMock({
+        fileName: 'mongo.js',
+        modules: {
+        
+        },
+        packageName: 'mongo',
+        packageScopeExports: {
+            'mongo': ['Mongo'],
+        },
+        mainModulePath: '',
+        meteorVersion: 3,
+    })
+}
+
+function prepareMock<Modules extends ModuleList>({ fileName, meteorVersion = 2, ...details }: PrepareMockModule<Modules>): MockModule<Modules> {
+    const filePath = Path.join(__dirname, `meteor-bundle`, `meteor-v${meteorVersion}`, `${fileName}.bundle`);
     const packageId = `meteor/${details.packageName}`;
     
     const mock = {
@@ -163,10 +191,15 @@ function prepareMock<Modules extends ModuleList>({ fileName, ...details }: Prepa
         filePath,
         packageId,
         fileContent: FS.readFile(filePath, 'utf-8'),
+        meteorVersion,
         ...details,
     }
     
-    AllMockPackages.push(mock);
+    if (meteorVersion === 3) {
+        AllMockPackages_MeteorV3.push(mock);
+    } else {
+        AllMockPackages_MeteorV2.push(mock);
+    }
     
     return mock;
 }
@@ -179,14 +212,16 @@ export const LazyLoadedPackage = new class {
         TestLazy: this.prepareMock({
             fileName: 'test_lazy.js',
             packageName: 'test:lazy',
+            meteorVersion: 2,
         }),
     }
     
     protected prepareMock(lazyMock: {
         fileName: string;
         packageName: string;
+        meteorVersion: 3 | 2,
     }) {
-        const filePath = Path.join(__dirname, 'meteor-bundle/pre-auto-import/', lazyMock.fileName);
+        const filePath = Path.join(__dirname, `meteor-bundle/meteor-v${lazyMock.meteorVersion}/pre-auto-import/`, `${lazyMock.fileName}.bundle`);
         return {
             filePath,
             fileContent: FS.readFile(filePath, 'utf-8'),
@@ -232,10 +267,12 @@ interface PrepareMockModule<Modules extends ModuleList> {
     modules: Modules;
     packageScopeExports: PackageScopeExports,
     mainModulePath: string;
+    meteorVersion?: 2 | 3;
 }
 
 interface MockModule<Modules extends ModuleList> extends PrepareMockModule<Modules> {
     filePath: string;
     fileContent: Promise<string>;
     packageId: string;
+    meteorVersion: 2 | 3;
 }

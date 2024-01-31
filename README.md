@@ -23,7 +23,7 @@ Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
   - [**Solid.js**](https://www.solidjs.com/)
     - [Example Project](/examples/solid)
     - [Preview](https://solid--meteor-vite.wcaserver.com)
-  - Meteor v3 (Work in progress)
+  - [**Meteor v3** (beta)](https://guide.meteor.com/3.0-migration) *Tested only with core packages*
     - [Example Project](/examples/meteor-v3-vue)
     - [Preview](https://meteor-v3-vue--meteor-vite.wcaserver.com)
 
@@ -244,9 +244,9 @@ The Vite integration comes with two dependencies that work together to enable co
     - [x] Default exports
     - [x] Re-exports (named + wildcard)
     - [x] Re-exports via intermediary variable
-- [ ] Meteor v3 Support
+- [x] Meteor v3 support
     - [x] Migrate bundler from Fibers to Async/Await
-    - [ ] Update Meteor bundle parser to support new format introduced in v3.
+    - [x] Update Meteor bundle parser to support new format introduced in v3.
 - [x] Code-splitting/Dynamic imports
 - [ ] Migrate intermediary production-build transpile step from Babel to esbuild.
 - [ ] SSR (not tested)
