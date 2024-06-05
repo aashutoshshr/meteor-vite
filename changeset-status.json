@@ -3,23 +3,23 @@
     {
       "releases": [
         {
-          "name": "vite-bundler",
+          "name": "meteor-vite",
           "type": "patch"
         }
       ],
-      "summary": "Fix base URL for Meteor IPC listener",
-      "id": "swift-bottles-live"
+      "summary": "Update to handle the new parameter format for Meteor V3 release candidate's package registration queue. Should addess the issue mentioned on the Meteor forums: https://forums.meteor.com/t/meteor-3-0-rc-0-is-out/61515/9",
+      "id": "yellow-tables-fetch"
     }
   ],
   "releases": [
     {
-      "name": "vite-bundler",
+      "name": "meteor-vite",
       "type": "patch",
-      "oldVersion": "2.0.0-beta.13",
+      "oldVersion": "1.10.2",
       "changesets": [
-        "swift-bottles-live"
+        "yellow-tables-fetch"
       ],
-      "newVersion": "2.0.0-beta.14"
+      "newVersion": "1.10.3-beta.0"
     }
   ],
   "preState": {
@@ -42,7 +42,8 @@
       "shaggy-dingos-push",
       "strange-trains-float",
       "swift-bottles-live",
-      "tender-mails-fold"
+      "tender-mails-fold",
+      "yellow-tables-fetch"
     ]
   }
 }
