@@ -1,5 +1,11 @@
 # meteor-vite
 
+## 1.10.3-beta.0
+
+### Patch Changes
+
+- 8d4ea571: Update to handle the new parameter format for Meteor V3 release candidate's package registration queue. Should addess the issue mentioned on the Meteor forums: https://forums.meteor.com/t/meteor-3-0-rc-0-is-out/61515/9
+
 ## 1.10.2
 
 ### Patch Changes
