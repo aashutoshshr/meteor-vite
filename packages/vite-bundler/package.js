@@ -10,7 +10,7 @@ Package.registerBuildPlugin({
     name: 'vite',
     use: [
         'ecmascript@0.16.2 || 1.0.0',
-        'caching-compiler@1.2.2 || 2.0.0-beta300.0',
+        'caching-compiler@1.2.2',
         'babel-compiler@7.9.0',
         'typescript@3.0.0 || 4.0.0 || 5.0.0',
     ],
@@ -35,7 +35,7 @@ Npm.depends({
 });
 
 Package.onUse(function (api) {
-    api.versionsFrom(['2.8.2', '2.12', '3.0-beta.0']);
+    api.versionsFrom(['2.8.2', '2.12', '2.16']);
     api.use([
         'fetch',
         'webapp',
