@@ -3,23 +3,23 @@
     {
       "releases": [
         {
-          "name": "meteor-vite",
+          "name": "vite-bundler",
           "type": "patch"
         }
       ],
-      "summary": "Update to handle the new parameter format for Meteor V3 release candidate's package registration queue. Should addess the issue mentioned on the Meteor forums: https://forums.meteor.com/t/meteor-3-0-rc-0-is-out/61515/9",
-      "id": "yellow-tables-fetch"
+      "summary": "Update version compatability to prevent installs from Meteor v3 when they should use the 2.0 release. The API is the same, just the underlying bundle strategy that is incompatible.",
+      "id": "tender-kangaroos-report"
     }
   ],
   "releases": [
     {
-      "name": "meteor-vite",
+      "name": "vite-bundler",
       "type": "patch",
-      "oldVersion": "1.10.2",
+      "oldVersion": "1.12.12",
       "changesets": [
-        "yellow-tables-fetch"
+        "tender-kangaroos-report"
       ],
-      "newVersion": "1.10.3"
+      "newVersion": "1.12.13"
     }
   ]
 }
