@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - release
+      - meteor-v2
 
 jobs:
   vue:

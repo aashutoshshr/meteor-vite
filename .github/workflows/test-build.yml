@@ -7,6 +7,7 @@ on:
       - main
       - release
       - meteor-v3
+      - meteor-v2
   pull_request:
     branches:
       - main
