@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 1.12.13
+
+### Patch Changes
+
+- 8fefb051: Update version compatability to prevent installs from Meteor v3 when they should use the 2.0 release. The API is the same, just the underlying bundle strategy that is incompatible.
+
 ## 1.12.12
 
 ### Patch Changes
