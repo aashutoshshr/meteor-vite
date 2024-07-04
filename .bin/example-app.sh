@@ -51,6 +51,12 @@ start() {
   $npm start -- "$@"
 }
 
+# Run a command in the context of the provided example app
+run() {
+  cd "$APP_DIR" || exit 1
+  "$@"
+}
+
 # Install dependencies for dev app
 install() {
   cd "$APP_DIR" || exit 1
