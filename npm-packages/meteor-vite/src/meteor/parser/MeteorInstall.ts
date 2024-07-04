@@ -150,9 +150,9 @@ export class MeteorInstall {
                 main: '',
             }, module.jsonContent);
             
-            this.name = this.packageJson.name;
-            this.packageId = this.packageJson.name;
-            this.mainModulePath = this.packageJson.main;
+            this.name = this.name || this.packageJson.name;
+            this.packageId = this.packageId || this.packageJson.name;
+            this.mainModulePath = this.mainModulePath || this.packageJson.main;
         });
     }
     
