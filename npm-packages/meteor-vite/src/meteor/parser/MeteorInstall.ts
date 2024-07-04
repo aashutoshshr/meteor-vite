@@ -141,6 +141,9 @@ export class MeteorInstall {
             if (name !== 'package.json') {
                 return;
             }
+            if (this.type !== 'npm') {
+                return;
+            }
             if (!module.jsonContent) {
                 throw new ModuleExportsError(`Unable to parse package.json for ${path}!`, property);
             }
