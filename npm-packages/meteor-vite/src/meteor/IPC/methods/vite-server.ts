@@ -36,7 +36,7 @@ export default defineIpcMethods({
     },
     
     async 'vite.watch.ssr'({ packageJson }: Pick<DevServerOptions, 'packageJson'>) {
-        await MeteorServerBuilder({ packageJson });
+        await MeteorServerBuilder({ packageJson, watch: true });
     },
     
     async 'vite.server.start'({ packageJson, meteorParentPid, meteorConfig }: DevServerOptions) {
